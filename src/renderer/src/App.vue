@@ -1,9 +1,5 @@
-<script setup lang="ts">
-const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <v-container>
-    <v-btn @click="ipcHandle">IPC</v-btn>
-  </v-container>
+  <v-app> </v-app>
 </template>

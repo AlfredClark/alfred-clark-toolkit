@@ -1,13 +1,28 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import log from './logger'
 import { join } from 'path'
+import { app, shell, BrowserWindow, screen, ipcMain } from 'electron'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 
-function createWindow(): void {
-  // Create the browser window.
+/**
+ * 创建窗口
+ * @return BrowserWindow 窗口对象
+ */
+function createWindow(): BrowserWindow {
+  // 获得主显示器分辨率并设置初始窗口大小(默认采用黄金比例)
+  const width = Math.floor(screen.getPrimaryDisplay().workAreaSize.width * 0.618)
+  const height = Math.floor(screen.getPrimaryDisplay().workAreaSize.height * 0.618)
+
+  // 配置最小窗口大小
+  const minWidth = Math.floor(screen.getPrimaryDisplay().workAreaSize.width / 2)
+  const maxWidth = Math.floor(screen.getPrimaryDisplay().workAreaSize.height / 2)
+
+  // 创建浏览器窗口
   const mainWindow = new BrowserWindow({
-    width: 900,
-    height: 670,
+    width: width,
+    height: height,
+    minWidth: minWidth,
+    maxWidth: maxWidth,
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
@@ -17,58 +32,62 @@ function createWindow(): void {
     }
   })
 
+  // 窗口加载完成后显示
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
   })
 
+  // 窗口打开事件处理
   mainWindow.webContents.setWindowOpenHandler((details) => {
-    shell.openExternal(details.url)
+    shell.openExternal(details.url).then(() => {
+      log.info('Opened mainWindow to : ' + details.url)
+    })
     return { action: 'deny' }
   })
 
-  // HMR for renderer base on electron-vite cli.
-  // Load the remote URL for development or the local html file for production.
+  // 基于electronic-vite-cli的渲染器HMR
+  // 加载用于开发的远程URL或用于生产的本地html文件
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-    mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
+    mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL']).then(() => {
+      log.info('loadURL : ELECTRON_RENDERER_URL')
+    })
   } else {
-    mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
+    mainWindow.loadFile(join(__dirname, '../renderer/index.html')).then(() => {
+      log.info('loadURL : ../renderer/index.html')
+    })
   }
+
+  // 返回窗口对象，便于后续操作
+  return mainWindow
 }
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
+// 当Electron完成初始化并准备创建浏览器窗口时，将调用此方法
+// 某些API只能在此事件发生后使用
 app.whenReady().then(() => {
-  // Set app user model id for windows
-  electronApp.setAppUserModelId('com.electron')
+  // 为窗口设置应用程序用户模型ID
+  electronApp.setAppUserModelId('alfred.clark.toolkit')
 
-  // Default open or close DevTools by F12 in development
-  // and ignore CommandOrControl + R in production.
-  // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
+  // 在开发中默认按F12打开或关闭DevTools，在生产中忽略Command/Ctrl+R
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  // IPC test
+  // IPC测试
   ipcMain.on('ping', () => console.log('pong'))
 
+  // 创建主窗口
   createWindow()
 
+  // 程序激活时创建窗口
   app.on('activate', function () {
-    // On macOS it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
+    // 在macOS上，当单击dock图标并且没有其他打开的窗口时，通常会在应用程序中重新创建一个窗口
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
 })
 
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
+// 关闭所有窗口后退出，macOS除外；在那里，应用程序及其菜单栏通常会保持活动状态，直到用户使用Cmd+Q明确退出
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
   }
 })
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.

@@ -3,14 +3,16 @@
 }
 
 body {
-  display: flex;
-  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
   min-width: 100vw;
+  min-height: 100vh;
+  display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  background-image: url('./wavy-lines.svg');
-  background-size: cover;
   user-select: none;
-  text-rendering: optimizeLegibility;
+  text-rendering: auto;
+  background-size: cover;
+  background-image: url('./wavy-lines.svg');
 }
