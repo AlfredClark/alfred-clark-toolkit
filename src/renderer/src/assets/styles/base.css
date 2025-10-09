@@ -14,5 +14,5 @@ body {
   user-select: none;
   text-rendering: auto;
   background-size: cover;
-  background-image: url('./wavy-lines.svg');
+  background-image: url('../images/wavy-lines.svg');
 }
