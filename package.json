@@ -27,10 +27,10 @@
     "electron-log": "^5.4.3",
     "electron-updater": "^6.3.9",
     "pinia": "^3.0.3",
-    "vuetify": "^3.10.4",
+    "pinia-plugin-persistedstate": "^4.5.0",
     "vue-i18n": "^11.1.12",
     "vue-router": "^4.5.1",
-    "pinia-plugin-persistedstate": "^4.5.0"
+    "vuetify": "^3.10.4"
   },
   "typings": "index.d.ts",
   "devDependencies": {
@@ -39,6 +39,8 @@
     "@electron-toolkit/tsconfig": "^2.0.0",
     "@types/node": "^22.18.6",
     "@vitejs/plugin-vue": "^6.0.1",
+    "@vue/runtime-core": "^3.5.22",
+    "@vue/runtime-dom": "^3.5.22",
     "autoprefixer": "^10.4.21",
     "cssnano": "^7.1.1",
     "electron": "^38.1.2",
@@ -49,9 +51,9 @@
     "postcss-import": "^16.1.1",
     "postcss-preset-env": "^10.4.0",
     "prettier": "^3.6.2",
-    "typescript": "^5.9.2",
+    "typescript": "^5.9.3",
     "vite": "^7.1.6",
-    "vue": "^3.5.21",
+    "vue": "^3.5.22",
     "vue-eslint-parser": "^10.2.0",
     "vue-tsc": "^3.0.7"
   }

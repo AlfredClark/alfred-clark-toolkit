@@ -15,14 +15,14 @@ function createWindow(): BrowserWindow {
 
   // 配置最小窗口大小
   const minWidth = Math.floor(screen.getPrimaryDisplay().workAreaSize.width / 2)
-  const maxWidth = Math.floor(screen.getPrimaryDisplay().workAreaSize.height / 2)
+  const minHeight = Math.floor(screen.getPrimaryDisplay().workAreaSize.height / 2)
 
   // 创建浏览器窗口
   const mainWindow = new BrowserWindow({
     width: width,
     height: height,
     minWidth: minWidth,
-    maxWidth: maxWidth,
+    minHeight: minHeight,
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
