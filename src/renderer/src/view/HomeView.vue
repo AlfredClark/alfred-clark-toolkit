@@ -1,32 +1,41 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-
-const order = ref(0)
+const minimize = (): void => window.electron.ipcRenderer.send('minimize')
+const maximize = (): void => window.electron.ipcRenderer.send('maximize')
+const close = (): void => window.electron.ipcRenderer.send('close')
 </script>
 
 <template>
-  <v-navigation-drawer color="surface-variant" permanent></v-navigation-drawer>
+  <v-system-bar class="electron-drag-bar" color="grey-darken-3">
+    <v-icon icon="mdi-minus" class="electron-no-drag mr-1" @click="minimize"></v-icon>
+    <v-icon
+      icon="mdi-checkbox-blank-outline"
+      class="electron-no-drag mr-1"
+      @click="maximize"
+    ></v-icon>
+    <v-icon icon="mdi-close" class="electron-no-drag mr-1" @click="close"></v-icon>
+  </v-system-bar>
 
-  <v-app-bar :order="order" color="grey-lighten-2" title="Application bar" flat>
-    <template v-slot:append>
-      <v-switch
-        v-model="order"
-        class="me-2"
-        false-value="0"
-        label="Toggle order"
-        true-value="-1"
-        hide-details
-        inset
-      ></v-switch>
-    </template>
-  </v-app-bar>
+  <v-navigation-drawer color="grey-darken-2" width="72" permanent></v-navigation-drawer>
+
+  <v-navigation-drawer color="grey-darken-1" width="150" permanent></v-navigation-drawer>
+
+  <v-app-bar color="grey" height="48" flat></v-app-bar>
+
+  <v-navigation-drawer
+    color="grey-lighten-1"
+    location="right"
+    width="150"
+    permanent
+  ></v-navigation-drawer>
+
+  <v-app-bar color="grey-lighten-2" height="48" location="bottom" flat></v-app-bar>
 
   <v-main class="d-flex align-center justify-center" height="300">
     <v-container>
       <v-sheet
         border="dashed md"
         color="surface-light"
-        height="200"
+        height="150"
         rounded="lg"
         width="100%"
       ></v-sheet>

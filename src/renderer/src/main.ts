@@ -1,4 +1,5 @@
 import './assets/styles/main.css'
+import '@mdi/font/css/materialdesignicons.css'
 
 import { createApp } from 'vue'
 import App from './App.vue'
@@ -14,6 +15,7 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import { createVueI18nAdapter } from 'vuetify/locale/adapters/vue-i18n'
 import { useI18n } from 'vue-i18n'
 import themes from '@renderer/themes'
+import { mdi, aliases } from 'vuetify/iconsets/mdi'
 
 // 创建vuetify插件对象
 const vuetify = createVuetify({
@@ -25,6 +27,13 @@ const vuetify = createVuetify({
   theme: {
     defaultTheme: 'light',
     themes
+  },
+  icons: {
+    defaultSet: 'mdi',
+    aliases,
+    sets: {
+      mdi
+    }
   }
 })
 

@@ -24,6 +24,8 @@ function createWindow(): BrowserWindow {
     minWidth: minWidth,
     minHeight: minHeight,
     show: false,
+    frame: false,
+    center: true,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
@@ -76,7 +78,22 @@ app.whenReady().then(() => {
   ipcMain.on('ping', () => console.log('pong'))
 
   // 创建主窗口
-  createWindow()
+  const mainWindow = createWindow()
+
+  // 最小化事件
+  ipcMain.on('minimize', () => mainWindow.minimize())
+
+  // 最大化事件
+  ipcMain.on('maximize', () => {
+    if (mainWindow.isMaximized()) {
+      mainWindow.restore()
+    } else {
+      mainWindow.maximize()
+    }
+  })
+
+  // 退出事件
+  ipcMain.on('close', () => mainWindow.close())
 
   // 程序激活时创建窗口
   app.on('activate', function () {
