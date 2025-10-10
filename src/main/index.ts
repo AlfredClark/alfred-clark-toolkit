@@ -1,8 +1,10 @@
-import log from './logger'
+import ipc from './ipc'
+import logger from './logger'
 import { join } from 'path'
 import { app, shell, BrowserWindow, screen, ipcMain } from 'electron'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import { startBackend } from './backend'
 
 /**
  * 创建窗口
@@ -42,7 +44,7 @@ function createWindow(): BrowserWindow {
   // 窗口打开事件处理
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url).then(() => {
-      log.info('Opened mainWindow to : ' + details.url)
+      logger.info('Window Open TO: ' + details.url)
     })
     return { action: 'deny' }
   })
@@ -51,13 +53,26 @@ function createWindow(): BrowserWindow {
   // 加载用于开发的远程URL或用于生产的本地html文件
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL']).then(() => {
-      log.info('loadURL : ELECTRON_RENDERER_URL')
+      logger.info('Window loadURL: ' + process.env['ELECTRON_RENDERER_URL'])
     })
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html')).then(() => {
-      log.info('loadURL : ../renderer/index.html')
+      logger.info('Window loadURL: ' + '../renderer/index.html')
     })
   }
+
+  //允许跨域请求1
+  mainWindow.webContents.session.webRequest.onBeforeSendHeaders((details, callback) => {
+    callback({ requestHeaders: { Origin: '*', ...details.requestHeaders } })
+  })
+  mainWindow.webContents.session.webRequest.onHeadersReceived((details, callback) => {
+    callback({
+      responseHeaders: {
+        'Access-Control-Allow-Origin': ['*'],
+        ...details.responseHeaders
+      }
+    })
+  })
 
   // 返回窗口对象，便于后续操作
   return mainWindow
@@ -74,26 +89,28 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  // IPC测试
-  ipcMain.on('ping', () => console.log('pong'))
+  // 绑定自定义IPC监听器
+  ipc.bindCustomListener(ipcMain)
 
   // 创建主窗口
   const mainWindow = createWindow()
 
-  // 最小化事件
-  ipcMain.on('minimize', () => mainWindow.minimize())
+  // 绑定窗口监听器
+  ipc.bindWindowListener(ipcMain, mainWindow)
 
-  // 最大化事件
-  ipcMain.on('maximize', () => {
-    if (mainWindow.isMaximized()) {
-      mainWindow.restore()
-    } else {
-      mainWindow.maximize()
-    }
+  startBackend().then((value) => {
+    // CSP处理
+    mainWindow.webContents.session.webRequest.onHeadersReceived((details, callback) => {
+      callback({
+        responseHeaders: {
+          'Access-Control-Allow-Origin': ['*'],
+          'Content-Security-Policy': ["connect-src 'self' " + value],
+          ...details.responseHeaders
+        }
+      })
+    })
+    logger.info('Start backend: ' + value)
   })
-
-  // 退出事件
-  ipcMain.on('close', () => mainWindow.close())
 
   // 程序激活时创建窗口
   app.on('activate', function () {
