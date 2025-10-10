@@ -109,7 +109,6 @@ app.whenReady().then(() => {
         }
       })
     })
-    logger.info('Start backend: ' + value)
   })
 
   // 程序激活时创建窗口

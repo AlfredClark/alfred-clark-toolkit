@@ -15,8 +15,8 @@ files:
   - '!{.postcssrc.json,.gitignore}'
   - '!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}'
 extraFiles:
-  - backend/*
-  - conf/*
+  - ./backend
+  - ./conf
 asarUnpack:
   - resources/**
 win:

@@ -31,7 +31,8 @@
     "pinia-plugin-persistedstate": "^4.5.0",
     "vue-i18n": "^11.1.12",
     "vue-router": "^4.5.1",
-    "vuetify": "^3.10.4"
+    "vuetify": "^3.10.4",
+    "yaml": "^2.8.1"
   },
   "typings": "index.d.ts",
   "devDependencies": {

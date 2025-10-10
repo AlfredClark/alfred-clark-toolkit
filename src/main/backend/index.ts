@@ -1,3 +1,7 @@
+import config from '../config'
+
 export async function startBackend(): Promise<string> {
-  return 'http://localhost:8000'
+  return new Promise((resolve) => {
+    resolve('http://' + config.backend.host + ':' + config.backend.port)
+  })
 }
