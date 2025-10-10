@@ -1,10 +1,10 @@
 import ipc from './ipc'
-import logger from './logger'
+import Logger from '../utils/logger'
 import { join } from 'path'
 import { app, shell, BrowserWindow, screen, ipcMain } from 'electron'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import { startBackend } from './backend'
+import { startBackend } from '../utils/backend'
 
 /**
  * 创建窗口
@@ -44,7 +44,7 @@ function createWindow(): BrowserWindow {
   // 窗口打开事件处理
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url).then(() => {
-      logger.info('Window Open TO: ' + details.url)
+      Logger.scope('Main').info('Window Open TO: ' + details.url)
     })
     return { action: 'deny' }
   })
@@ -53,11 +53,11 @@ function createWindow(): BrowserWindow {
   // 加载用于开发的远程URL或用于生产的本地html文件
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL']).then(() => {
-      logger.info('Window loadURL: ' + process.env['ELECTRON_RENDERER_URL'])
+      Logger.scope('Main').info('Window loadURL: ' + process.env['ELECTRON_RENDERER_URL'])
     })
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html')).then(() => {
-      logger.info('Window loadURL: ' + '../renderer/index.html')
+      Logger.scope('Main').info('Window loadURL: ' + '../renderer/index.html')
     })
   }
 

@@ -1,7 +1,8 @@
 import axios from 'axios'
+const config = window.config
 
 const request = axios.create({
-  baseURL: 'http://localhost:8000/api', // 设置基地址
+  baseURL: 'http://' + config.backend.host + ':' + config.backend.port + '/api', // 设置基地址
   timeout: 2000 // 请求超时：当 2s 没有响应就会结束请求
 })
 
@@ -18,8 +19,8 @@ request.interceptors.request.use(
     return Promise.reject(error)
   }
 )
-
 // 添加响应拦截器
+
 request.interceptors.response.use(
   function (response) {
     // 只要响应对象中的数据
