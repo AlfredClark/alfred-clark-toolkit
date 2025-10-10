@@ -13,6 +13,7 @@ import { createPinia } from 'pinia'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import { createVueI18nAdapter } from 'vuetify/locale/adapters/vue-i18n'
 import { useI18n } from 'vue-i18n'
+import themes from '@renderer/themes'
 
 // 创建vuetify插件对象
 const vuetify = createVuetify({
@@ -20,6 +21,10 @@ const vuetify = createVuetify({
   directives,
   locale: {
     adapter: createVueI18nAdapter({ i18n, useI18n }) // i18n适配器
+  },
+  theme: {
+    defaultTheme: 'light',
+    themes
   }
 })
 

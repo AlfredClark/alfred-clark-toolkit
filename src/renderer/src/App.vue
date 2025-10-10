@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <v-app>
+  <v-app class="w-100 h-100">
     <router-view></router-view>
   </v-app>
 </template>

@@ -10,5 +10,3 @@ Alfred Clark's Custom Toolkit Project.
 - front-i18n: **Vue-i18n**
 - front-router: **Vue-Router**
 - front-component: **Vuetify**
-
-
