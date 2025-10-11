@@ -1,5 +1,5 @@
 import { ElectronAPI } from '@electron-toolkit/preload'
-import { Config } from "../utils/config/config";
+import { Config } from '../utils/config/config'
 
 declare global {
   interface Window {
