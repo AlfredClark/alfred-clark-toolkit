@@ -98,8 +98,8 @@ app.whenReady().then(() => {
   // 绑定窗口监听器
   ipc.bindWindowListener(ipcMain, mainWindow)
 
+  // 开启后端并进行CSP处理
   startBackend().then((value) => {
-    // CSP处理
     mainWindow.webContents.session.webRequest.onHeadersReceived((details, callback) => {
       callback({
         responseHeaders: {
