@@ -3,7 +3,10 @@ import { createMemoryHistory, createRouter } from 'vue-router'
 import HomeView from '@renderer/view/HomeView.vue'
 
 // 路由规则
-const routes = [{ path: '/', component: HomeView }]
+const routes = [
+  { path: '/', component: HomeView },
+  { path: '/home', component: HomeView }
+]
 
 // 创建路由
 const router = createRouter({
